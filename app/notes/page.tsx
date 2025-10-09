@@ -19,10 +19,11 @@ export default async function NotesPage() {
 
   return (
     <>
-    <HydrationBoundary state={dehydrate(queryClient)}>
-    </HydrationBoundary>
-    <NotesClient   
+      <HydrationBoundary state={dehydrate(queryClient)}>
+         <NotesClient   
     />
+    </HydrationBoundary>
+   
   </>
   );
 }
