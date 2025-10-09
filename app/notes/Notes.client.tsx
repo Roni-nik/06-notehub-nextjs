@@ -1,3 +1,4 @@
+
 "use client";
 
 import css from "./Notes.client.module.css";
@@ -14,24 +15,15 @@ import Pagination from "../../components/Pagination/Pagination";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import Modal from "../../components/Modal/Modal";
 import NoteForm from "../../components/NoteForm/NoteForm";
-import type { NoteSearchResponse } from "../../lib/api";
 
-type NoteClientProps = {
-  initialData: NoteSearchResponse;
-  searchQuery: string;
-  currentPage: number;
-};
-
-export default function NotesClient({
-  initialData,
-  searchQuery: initialSearch,
-  currentPage: initialPage,
-}: NoteClientProps) {
-  const [searchQuery, setSearchQuery] = useState(initialSearch);
-  const [currentPage, setCurrentPage] = useState(initialPage);
-  const [inputValue, setInputValue] = useState(initialSearch);
+export default function NotesClient() {
+  // 🔹 Локальний стан (без пропсів)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [inputValue, setInputValue] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
 
+  // 🔹 Дебаунс пошуку
   const updateSearchQuery = useDebouncedCallback(
     (value: string) => setSearchQuery(value),
     300
@@ -42,17 +34,17 @@ export default function NotesClient({
     updateSearchQuery(value);
   };
 
+  // 🔹 Отримання нотаток через React Query
   const { data, isLoading, isSuccess } = useQuery({
     queryKey: ["notes", searchQuery, currentPage],
     queryFn: () => fetchNotes(searchQuery, currentPage),
     placeholderData: keepPreviousData,
-    initialData: initialData,
   });
 
   const totalPages = data?.totalPages || 0;
-
   const noNotesToastShown = useRef(false);
 
+  // 🔹 Повідомлення про відсутність нотаток
   useEffect(() => {
     if (!isLoading && data && data.notes.length === 0) {
       if (!noNotesToastShown.current) {
@@ -64,6 +56,7 @@ export default function NotesClient({
     }
   }, [data, isLoading]);
 
+  // 🔹 Скидання сторінки при новому пошуку
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
@@ -93,4 +86,5 @@ export default function NotesClient({
     </div>
   );
 }
+
        
