@@ -16,7 +16,7 @@ export default async function NoteDetails({ params }: Props) {
 
  return (
     <HydrationBoundary state={dehydratedState}>
-    <NoteDetailsClient/>
+    <NoteDetailsClient />
     </HydrationBoundary>
   );
 }
